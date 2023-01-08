@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: 100px 100px 100px 100px 100px;
+            grid-template-rows: 100px 100px 100px, 100px 100px;
+        }
+        .block {
+            background-color: aqua;
+            height: 100px;
+            
+        }
+        .block2{
+            background-color: bisque;
+            height: 100px;
+        }
+        .block4 {
+            background-color:blue;
+            height: 100px;
+
+        }
+        .block8 {
+            background-color:blueviolet;
+            height: 100px;
+        }
+        .block16 {
+            background-color:brown;
+            height: 100px;
+        }
+        .block32 {
+            background-color:aquamarine;
+            height: 100px;
+        }
+        .block0{
+            background-color: palevioletred;
+            height: 100px;
+        }
+        
+    </style>
+    
+</head>
+<body id="body">
+  <div class="grid" id="grid"></div>
+  <button onclick="up()">上</button>
+  <button onclick="down()">下</button>
+    <button onclick="left()">左</button>
+    <button onclick="right()">右</button>
+</body>
+<script>
+        
+     var vec =[[0,0,0,0,0],
+              [0,0,0,0,0],
+               [0,0,0,0,0],
+               [0,0,0,0,0],
+               [0,0,0,0,0]];
+     
+    function render(){
+        let div = document.getElementById("grid");
+        grid.innerHTML="";
+        vec.forEach((outside,index1) => {
+          outside.forEach((value,index2)=> {
+             let element = document.createElement("div");
+             let content = document.createTextNode(value);
+            element.appendChild(content);
+            // element.setAttribute("class","block");
+            if(value==1)
+            {
+                element.setAttribute("class","block");
+            }
+            else if(value==0)
+            {
+                element.setAttribute("class","block0");
+                element.innerHTML="";
+            }
+            else if(value==2)
+            {
+                element.setAttribute("class","block2");
+            }
+            else if(value==4)
+            {
+                element.setAttribute("class","block4");
+            }
+            else if(value==8)
+            {
+                element.setAttribute("class","block8");
+            }
+            else if(value==16)
+            {
+                element.setAttribute("class","block16");
+            }
+            else if(value==32)
+            {
+                element.setAttribute("class","block32");
+            }
+            let grid = document.getElementById("grid");
+            grid.appendChild(element);
+
+           
+          })
+        });
+
+    };
+    function rand(){
+        return Math.round(Math.random()*4);
+    }
+    function generate_block(count){
+        let counter=0;
+        while(1){
+            let m=rand();
+            let n=rand();
+            if(vec[m][n]==0)
+            {
+                counter++;
+                vec[m][n]=2;
+
+                
+            }
+            if(counter>=count)
+            break;
+        }
+        
+    }
+    function check(){
+        let flag=false;
+        for(let i=0;i<5;i++)
+        {
+            for(let j=0;j<5;j++)
+            {
+                if(vec[i][j]==0)
+                {
+                    flag==true;
+
+                }
+            }
+        }
+        if(flag)
+        return flag;
+
+
+
+        for(let i=1;i<4;i++)
+        {
+            for(let j=1;j<4;j++)
+            {
+                if(vec[i][j]!=vec[i][j-1]&&
+                   vec[i][j]!=vec[i][j+1]&&
+                   vec[i][j]!=vec[i-1][j]&&
+                   vec[i][j]!=vec[i+1][j])
+                   continue;
+                else
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    function up(){
+        for(let i=0;i<5;i++){
+            for(let j=0;j<5;j++){
+               if(vec[j][i]!=0 ){
+                    for(let m=j-1;m>=0;m--)
+                    {
+                        if(vec[m][i]==vec[m+1][i]||vec[m][i]==0)
+                        {
+                            vec[m][i]+=vec[m+1][i];
+                            vec[m+1][i]=0;
+                        }
+                    }
+               }
+            }
+        }
+    
+       refresh();
+    }
+    function down(){
+        for(let i=0;i<5;i++){
+            for(let j=4;j>=0;j--){
+               if(vec[j][i]!=0 ){
+                    for(let m=j+1;m<5;m++)
+                    {
+                        if(vec[m][i]==vec[m-1][i]||vec[m][i]==0)
+                        {
+                            vec[m][i]+=vec[m-1][i];
+                            vec[m-1][i]=0;
+                        }
+                    }
+               }
+            }
+        }
+    
+        refresh();
+    }
+    function left(){
+        for(let i=0;i<5;i++){
+            for(let j=0;j<5;j++){
+               if(vec[i][j]!=0 ){
+                    for(let m=j-1;m>=0;m--)
+                    {
+                        if(vec[i][m]==vec[i][m+1]||vec[i][m]==0)
+                        {
+                            vec[i][m]+=vec[i][m+1];
+                            vec[i][m+1]=0;
+                        }
+                    }
+               }
+            }
+        }
+    
+        refresh();
+    }
+    function right(){
+        for(let i=0;i<5;i++){
+            for(let j=0;j<5;j++){
+               if(vec[i][j]!=0 ){
+                    for(let m=j+1;m<5;m++)
+                    {
+                        if(vec[i][m]==vec[i][m-1]||vec[i][m]==0)
+                        {
+                            vec[i][m]+=vec[i][m-1];
+                            vec[i][m-1]=0;
+                        }
+                    }
+               }
+            }
+        }
+    
+        refresh();
+    }
+    function refresh(){
+        generate_block(1);
+        render();
+        if(!check){        alert("fail!")};
+    }
+    
+    
+    generate_block(2);
+    
+    render();
+    
+   
+
+   
+    
+
+</script>
+</html>
